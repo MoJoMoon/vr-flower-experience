@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VR Flower Passthrough Experience</title>
+    <title>VR Flower Experience</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
     <style>
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #000;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         
         #ui {
@@ -21,70 +20,43 @@
             left: 20px;
             z-index: 100;
             color: white;
-            background: rgba(0,0,0,0.8);
-            padding: 25px;
-            border-radius: 15px;
-            max-width: 350px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        }
-        
-        #ui h2 {
-            margin-top: 0;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 300px;
         }
         
         #nameInput {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             margin: 10px 0;
-            border: 2px solid #4ecdc4;
-            border-radius: 8px;
+            border: none;
+            border-radius: 5px;
             font-size: 16px;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            transition: all 0.3s;
-        }
-        
-        #nameInput:focus {
-            outline: none;
-            border-color: #ff6b6b;
-            background: rgba(255,255,255,0.2);
         }
         
         button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #ff6b6b;
             color: white;
             border: none;
             padding: 12px 20px;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
             margin: 5px;
-            transition: all 0.3s;
-            font-weight: 600;
+            transition: background 0.3s;
         }
         
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: #ff5252;
         }
         
         #vrButton {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            width: calc(100% - 10px);
-            margin-top: 15px;
+            background: #4ecdc4;
         }
         
-        #audioButton {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-        
-        .passthrough-button {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        #vrButton:hover {
+            background: #26a69a;
         }
         
         #vrStatus {
@@ -93,12 +65,11 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            background: rgba(0,0,0,0.9);
-            padding: 30px;
-            border-radius: 15px;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
             display: none;
             text-align: center;
-            backdrop-filter: blur(10px);
         }
         
         #loadingIndicator {
@@ -107,12 +78,11 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            background: rgba(0,0,0,0.9);
-            padding: 30px;
-            border-radius: 15px;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
             display: block;
             text-align: center;
-            backdrop-filter: blur(10px);
         }
         
         #instructions {
@@ -120,38 +90,26 @@
             bottom: 20px;
             left: 20px;
             color: white;
-            background: rgba(0,0,0,0.8);
-            padding: 20px;
-            border-radius: 15px;
-            max-width: 450px;
-            backdrop-filter: blur(10px);
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        
-        .particle {
-            position: absolute;
-            pointer-events: none;
-            opacity: 0;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 400px;
         }
     </style>
 </head>
 <body>
     <div id="ui">
-        <h2>🌺 VR Flower Experience</h2>
-        <input type="text" id="nameInput" placeholder="Enter name for flower bouquet" value="LOVE">
+        <h2>🌸 VR Flower Experience</h2>
+        <input type="text" id="nameInput" placeholder="Enter name for flower letters" value="LOVE">
         <br>
-        <button onclick="createFlowerBouquet()">🌸 Create Name Bouquet</button>
-        <button onclick="createFlowerHeart()">💝 Create Flower Heart</button>
-        <button onclick="createSpiralGarden()">🌻 Create Spiral Garden</button>
-        <button onclick="toggleAudio()" id="audioButton">🔊 Enable Ambient Sounds</button>
-        <button class="passthrough-button" onclick="togglePassthrough()">👁️ Toggle Passthrough Mode</button>
-        <button id="vrButton" onclick="enterVR()">🥽 Enter VR Mode</button>
+        <button onclick="createFlowerName()">Create Flower Letters</button>
+        <button onclick="createFlowerHeart()">Create Flower Heart</button>
+        <button id="vrButton" onclick="enterVR()">Enter VR Mode</button>
     </div>
     
     <div id="loadingIndicator">
         <h3>🌸 Loading VR Flower Experience...</h3>
-        <p>Preparing your magical garden...</p>
+        <p>Please wait while we prepare your beautiful garden!</p>
     </div>
     
     <div id="vrStatus">
@@ -160,38 +118,27 @@
     </div>
     
     <div id="instructions">
-        <strong>🖥️ Desktop Controls:</strong><br>
-        • Enter a name and click "Create Name Bouquet" for a 3D floral text<br>
-        • Click "Create Flower Heart" for an immersive heart garden<br>
-        • Try "Create Spiral Garden" for a magical flower spiral<br>
-        • Use WASD to move, mouse to look around<br><br>
-        <strong>🥽 Meta Quest 2 VR Controls:</strong><br>
-        • <strong>Passthrough:</strong> Toggle to see your real environment with virtual flowers<br>
-        • <strong>Right Thumbstick:</strong> Move forward/back/left/right<br>
-        • <strong>Left Thumbstick:</strong> Turn and look around<br>
-        • <strong>Trigger:</strong> Interact with flowers (they'll react!)<br>
-        • <strong>Grip:</strong> Pick up and move flowers<br>
-        • Natural head movement for looking around
+        <strong>Desktop Instructions:</strong><br>
+        • Enter a name and click "Create Flower Letters" for a floral text display<br>
+        • Click "Create Flower Heart" for a walkable heart structure<br>
+        • Use WASD to move, mouse to look around<br>
+        • Click "Enter VR Mode" on Meta Quest for immersive experience<br><br>
+        <strong>VR Instructions:</strong><br>
+        • Use thumbsticks on controllers to move around<br>
+        • Press A/X button to move forward, B/Y to move backward<br>
+        • Pull trigger for visual feedback<br>
+        • Look around naturally with your head movement
     </div>
 
     <script>
         // Global variables
-        let scene, camera, renderer, flowers = [], interactiveFlowers = [];
+        let scene, camera, renderer, flowers = [];
         let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
         const velocity = new THREE.Vector3();
         const direction = new THREE.Vector3();
         let controller1, controller2, controllerGrip1, controllerGrip2;
         let vrMovement = { x: 0, z: 0 };
-        let dolly, cameraRig;
-        let audioContext, audioEnabled = false;
-        let windSound, birdSounds = [], harpSynth;
-        let passthroughEnabled = false;
-        let selectedFlower = null;
-        let raycaster = new THREE.Raycaster();
-        let tempMatrix = new THREE.Matrix4();
-        
-        // Particle system for effects
-        let particleSystem;
+        let dolly;
         
         // Initialize everything
         async function init() {
@@ -201,25 +148,20 @@
                 // Create scene
                 scene = new THREE.Scene();
                 scene.background = new THREE.Color(0x87CEEB);
-                scene.fog = new THREE.Fog(0x87CEEB, 10, 50);
                 
                 // Create camera
                 camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
                 camera.position.set(0, 1.6, 5);
                 
-                // Create renderer with better settings
+                // Create renderer
                 renderer = new THREE.WebGLRenderer({ 
                     antialias: true,
-                    alpha: true,
-                    powerPreference: "high-performance"
+                    alpha: true
                 });
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 renderer.xr.enabled = true;
                 renderer.shadowMap.enabled = true;
                 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-                renderer.outputEncoding = THREE.sRGBEncoding;
-                renderer.toneMapping = THREE.ACESFilmicToneMapping;
-                renderer.toneMappingExposure = 1.0;
                 
                 document.body.appendChild(renderer.domElement);
                 
@@ -229,23 +171,32 @@
                 // Hide loading indicator
                 document.getElementById('loadingIndicator').style.display = 'none';
                 
-                // Add enhanced lighting
-                setupLighting();
+                // Add lights
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+                scene.add(ambientLight);
                 
-                // Add ground with grass texture
-                createGround();
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(10, 10, 5);
+                directionalLight.castShadow = true;
+                scene.add(directionalLight);
                 
-                // Setup VR controllers with interaction
+                // Add ground
+                const groundGeometry = new THREE.PlaneGeometry(50, 50);
+                const groundMaterial = new THREE.MeshLambertMaterial({ 
+                    color: 0x90EE90,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+                ground.rotation.x = -Math.PI / 2;
+                ground.receiveShadow = true;
+                scene.add(ground);
+                
+                // Setup VR controllers
                 setupVRControllers();
                 
                 // Setup desktop controls
                 setupControls();
-                
-                // Setup audio
-                setupAudio();
-                
-                // Create particle system
-                createParticleSystem();
                 
                 // Start animation loop
                 renderer.setAnimationLoop(animate);
@@ -264,116 +215,12 @@
             }
         }
         
-        function setupLighting() {
-            // Ambient light for overall brightness
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-            scene.add(ambientLight);
-            
-            // Main directional light (sun)
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(10, 20, 5);
-            directionalLight.castShadow = true;
-            directionalLight.shadow.camera.left = -20;
-            directionalLight.shadow.camera.right = 20;
-            directionalLight.shadow.camera.top = 20;
-            directionalLight.shadow.camera.bottom = -20;
-            directionalLight.shadow.camera.near = 0.1;
-            directionalLight.shadow.camera.far = 50;
-            directionalLight.shadow.mapSize.width = 2048;
-            directionalLight.shadow.mapSize.height = 2048;
-            scene.add(directionalLight);
-            
-            // Add some colored accent lights
-            const pinkLight = new THREE.PointLight(0xff69b4, 0.5, 10);
-            pinkLight.position.set(5, 3, 5);
-            scene.add(pinkLight);
-            
-            const blueLight = new THREE.PointLight(0x4169e1, 0.5, 10);
-            blueLight.position.set(-5, 3, -5);
-            scene.add(blueLight);
-        }
-        
-        function createGround() {
-            // Create a more natural-looking ground
-            const groundGeometry = new THREE.PlaneGeometry(100, 100, 50, 50);
-            
-            // Add some height variation to the ground
-            const vertices = groundGeometry.attributes.position.array;
-            for (let i = 0; i < vertices.length; i += 3) {
-                vertices[i + 2] = Math.random() * 0.3;
-            }
-            groundGeometry.computeVertexNormals();
-            
-            const groundMaterial = new THREE.MeshLambertMaterial({ 
-                color: 0x3a5f3a,
-                transparent: true,
-                opacity: passthroughEnabled ? 0.3 : 0.9
-            });
-            
-            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-            ground.rotation.x = -Math.PI / 2;
-            ground.receiveShadow = true;
-            ground.name = 'ground';
-            scene.add(ground);
-            
-            // Add some grass patches
-            for (let i = 0; i < 50; i++) {
-                const grassPatch = new THREE.Mesh(
-                    new THREE.PlaneGeometry(2, 2),
-                    new THREE.MeshLambertMaterial({ 
-                        color: 0x4a7c4a,
-                        transparent: true,
-                        opacity: passthroughEnabled ? 0.2 : 0.7
-                    })
-                );
-                grassPatch.rotation.x = -Math.PI / 2;
-                grassPatch.position.set(
-                    (Math.random() - 0.5) * 40,
-                    0.01,
-                    (Math.random() - 0.5) * 40
-                );
-                grassPatch.receiveShadow = true;
-                scene.add(grassPatch);
-            }
-        }
-        
-        function createParticleSystem() {
-            const particleCount = 100;
-            const particles = new THREE.BufferGeometry();
-            const positions = new Float32Array(particleCount * 3);
-            const colors = new Float32Array(particleCount * 3);
-            
-            for (let i = 0; i < particleCount * 3; i += 3) {
-                positions[i] = (Math.random() - 0.5) * 50;
-                positions[i + 1] = Math.random() * 10;
-                positions[i + 2] = (Math.random() - 0.5) * 50;
-                
-                colors[i] = 1;
-                colors[i + 1] = Math.random() * 0.5 + 0.5;
-                colors[i + 2] = Math.random() * 0.5 + 0.5;
-            }
-            
-            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-            
-            const particleMaterial = new THREE.PointsMaterial({
-                size: 0.1,
-                vertexColors: true,
-                transparent: true,
-                opacity: 0.6,
-                blending: THREE.AdditiveBlending
-            });
-            
-            particleSystem = new THREE.Points(particles, particleMaterial);
-            scene.add(particleSystem);
-        }
-        
         async function checkVRSupport() {
             const vrMessage = document.getElementById('vrMessage');
             const vrStatus = document.getElementById('vrStatus');
             
             if (!navigator.xr) {
-                vrMessage.textContent = 'WebXR not supported. Please use the Meta Quest browser.';
+                vrMessage.textContent = 'WebXR not supported. Try the Meta Quest browser.';
                 vrStatus.style.display = 'block';
                 setTimeout(() => vrStatus.style.display = 'none', 5000);
                 return;
@@ -382,8 +229,8 @@
             try {
                 const supported = await navigator.xr.isSessionSupported('immersive-vr');
                 if (supported) {
-                    vrMessage.textContent = '✅ VR Ready! Click "Enter VR Mode" to start.';
-                    document.getElementById('vrButton').style.background = 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)';
+                    vrMessage.textContent = 'VR Ready! Click "Enter VR Mode" to start.';
+                    document.getElementById('vrButton').style.background = '#4CAF50';
                 } else {
                     vrMessage.textContent = 'VR device not detected. Desktop mode available.';
                 }
@@ -398,44 +245,44 @@
         }
         
         function setupVRControllers() {
-            // Create camera rig for better VR movement
-            cameraRig = new THREE.Group();
-            cameraRig.position.set(0, 0, 5);
-            scene.add(cameraRig);
-            
+            // Create dolly for VR movement
             dolly = new THREE.Group();
-            cameraRig.add(dolly);
+            dolly.position.set(0, 0, 5);
+            scene.add(dolly);
             dolly.add(camera);
             
-            // Setup controller 1 (right hand)
+            // Setup controllers
             controller1 = renderer.xr.getController(0);
             controller1.addEventListener('selectstart', onSelectStart);
             controller1.addEventListener('selectend', onSelectEnd);
-            controller1.addEventListener('squeeze', onSqueeze);
             controller1.addEventListener('connected', function(event) {
-                this.add(buildController(event.data));
+                if (event.data) {
+                    this.add(buildController(event.data));
+                }
             });
             controller1.addEventListener('disconnected', function() {
-                this.remove(this.children[0]);
+                if (this.children.length > 0) {
+                    this.remove(this.children[0]);
+                }
             });
             dolly.add(controller1);
             
-            // Setup controller 2 (left hand)
             controller2 = renderer.xr.getController(1);
             controller2.addEventListener('selectstart', onSelectStart);
             controller2.addEventListener('selectend', onSelectEnd);
-            controller2.addEventListener('squeeze', onSqueeze);
             controller2.addEventListener('connected', function(event) {
-                this.add(buildController(event.data));
+                if (event.data) {
+                    this.add(buildController(event.data));
+                }
             });
             controller2.addEventListener('disconnected', function() {
-                this.remove(this.children[0]);
+                if (this.children.length > 0) {
+                    this.remove(this.children[0]);
+                }
             });
             dolly.add(controller2);
             
-            // Controller grips with models
-            const controllerModelFactory = new THREE.XRControllerModelFactory();
-            
+            // Controller grips
             controllerGrip1 = renderer.xr.getControllerGrip(0);
             controllerGrip1.add(buildControllerModel());
             dolly.add(controllerGrip1);
@@ -448,140 +295,64 @@
         function buildController(data) {
             let geometry, material;
             
-            switch (data.targetRayMode) {
-                case 'tracked-pointer':
-                    geometry = new THREE.BufferGeometry();
-                    geometry.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, -1], 3));
-                    geometry.setAttribute('color', new THREE.Float32BufferAttribute([0.5, 0.5, 0.5, 0, 0, 0], 3));
-                    material = new THREE.LineBasicMaterial({ 
-                        vertexColors: true, 
-                        blending: THREE.AdditiveBlending,
-                        linewidth: 2
-                    });
-                    return new THREE.Line(geometry, material);
-                    
-                case 'gaze':
-                    geometry = new THREE.RingGeometry(0.02, 0.04, 32).translate(0, 0, -1);
-                    material = new THREE.MeshBasicMaterial({ 
-                        opacity: 0.5, 
-                        transparent: true 
-                    });
-                    return new THREE.Mesh(geometry, material);
+            if (data.targetRayMode === 'tracked-pointer') {
+                geometry = new THREE.BufferGeometry();
+                geometry.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, -1], 3));
+                geometry.setAttribute('color', new THREE.Float32BufferAttribute([0.5, 0.5, 0.5, 0, 0, 0], 3));
+                material = new THREE.LineBasicMaterial({ 
+                    vertexColors: true, 
+                    blending: THREE.AdditiveBlending,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                return new THREE.Line(geometry, material);
+            } else if (data.targetRayMode === 'gaze') {
+                geometry = new THREE.RingGeometry(0.02, 0.04, 32).translate(0, 0, -1);
+                material = new THREE.MeshBasicMaterial({ 
+                    opacity: 0.5, 
+                    transparent: true,
+                    color: 0xffffff
+                });
+                return new THREE.Mesh(geometry, material);
             }
+            
+            // Default controller visual
+            geometry = new THREE.ConeGeometry(0.02, 0.1, 8);
+            material = new THREE.MeshBasicMaterial({ color: 0x888888 });
+            return new THREE.Mesh(geometry, material);
         }
         
         function buildControllerModel() {
-            const group = new THREE.Group();
-            
-            // Controller body
-            const geometry = new THREE.BoxGeometry(0.05, 0.12, 0.08);
-            const material = new THREE.MeshPhongMaterial({ 
-                color: 0x303030,
-                specular: 0x111111,
-                shininess: 100
-            });
+            const geometry = new THREE.BoxGeometry(0.05, 0.1, 0.05);
+            const material = new THREE.MeshLambertMaterial({ color: 0x444444 });
             const controller = new THREE.Mesh(geometry, material);
-            group.add(controller);
             
-            // Glowing tip
-            const tipGeometry = new THREE.SphereGeometry(0.03);
-            const tipMaterial = new THREE.MeshBasicMaterial({ 
-                color: 0x00ff88,
-                emissive: 0x00ff88,
-                emissiveIntensity: 0.5
-            });
+            const tipGeometry = new THREE.SphereGeometry(0.02);
+            const tipMaterial = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
             const tip = new THREE.Mesh(tipGeometry, tipMaterial);
-            tip.position.set(0, 0.06, 0);
-            group.add(tip);
+            tip.position.set(0, 0.05, 0);
+            controller.add(tip);
             
-            return group;
+            return controller;
         }
         
         function onSelectStart(event) {
             const controller = event.target;
-            
-            // Visual feedback
-            if (controller.children.length > 0) {
-                const line = controller.children[0];
-                if (line.material) {
-                    line.material.color.setHex(0xff0088);
+            if (controller.children.length > 0 && controller.children[0].children.length > 0) {
+                const tip = controller.children[0].children[0];
+                if (tip && tip.material) {
+                    tip.material.color.setHex(0xff0000);
                 }
-            }
-            
-            // Check for flower interaction
-            tempMatrix.identity().extractRotation(controller.matrixWorld);
-            raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
-            raycaster.ray.direction.set(0, 0, -1).applyMatrix4(tempMatrix);
-            
-            const intersects = raycaster.intersectObjects(interactiveFlowers, true);
-            if (intersects.length > 0) {
-                const flower = intersects[0].object.parent;
-                animateFlowerInteraction(flower);
             }
         }
         
         function onSelectEnd(event) {
             const controller = event.target;
-            
-            // Reset visual feedback
-            if (controller.children.length > 0) {
-                const line = controller.children[0];
-                if (line.material) {
-                    line.material.color.setHex(0x888888);
+            if (controller.children.length > 0 && controller.children[0].children.length > 0) {
+                const tip = controller.children[0].children[0];
+                if (tip && tip.material) {
+                    tip.material.color.setHex(0x00ff00);
                 }
-            }
-        }
-        
-        function onSqueeze(event) {
-            // Grip button pressed - could be used for picking up flowers
-            const controller = event.target;
-            
-            tempMatrix.identity().extractRotation(controller.matrixWorld);
-            raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
-            raycaster.ray.direction.set(0, 0, -1).applyMatrix4(tempMatrix);
-            
-            const intersects = raycaster.intersectObjects(interactiveFlowers, true);
-            if (intersects.length > 0) {
-                selectedFlower = intersects[0].object.parent;
-                controller.attach(selectedFlower);
-            }
-        }
-        
-        function animateFlowerInteraction(flower) {
-            // Create a blooming animation
-            const duration = 1000;
-            const startScale = flower.scale.x;
-            const startTime = Date.now();
-            
-            function updateAnimation() {
-                const elapsed = Date.now() - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                
-                // Ease in-out animation
-                const easeProgress = progress < 0.5 
-                    ? 2 * progress * progress 
-                    : -1 + (4 - 2 * progress) * progress;
-                
-                const scale = startScale + (0.3 * Math.sin(easeProgress * Math.PI));
-                flower.scale.set(scale, scale, scale);
-                
-                // Rotate petals
-                flower.rotation.y += 0.05;
-                
-                if (progress < 1) {
-                    requestAnimationFrame(updateAnimation);
-                } else {
-                    flower.scale.set(startScale, startScale, startScale);
-                }
-            }
-            
-            updateAnimation();
-            
-            // Play a sound if audio is enabled
-            if (audioEnabled && harpSynth) {
-                const notes = ['C5', 'E5', 'G5', 'C6'];
-                const note = notes[Math.floor(Math.random() * notes.length)];
-                harpSynth.triggerAttackRelease(note, '8n');
             }
         }
         
@@ -589,267 +360,105 @@
             if (!renderer.xr.isPresenting) return;
             
             const session = renderer.xr.getSession();
-            if (!session || !session.inputSources) return;
+            if (!session) return;
             
             vrMovement.x = 0;
             vrMovement.z = 0;
             
-            for (let i = 0; i < session.inputSources.length; i++) {
-                const inputSource = session.inputSources[i];
-                const gamepad = inputSource.gamepad;
-                
-                if (!gamepad || gamepad.axes.length < 4) continue;
-                
-                // Right controller (movement)
-                if (inputSource.handedness === 'right') {
-                    const thumbstickX = gamepad.axes[2];
-                    const thumbstickY = gamepad.axes[3];
-                    
-                    if (Math.abs(thumbstickX) > 0.2) vrMovement.x = -thumbstickX * 0.05;
-                    if (Math.abs(thumbstickY) > 0.2) vrMovement.z = thumbstickY * 0.05;
-                }
-                
-                // Left controller (rotation)
-                if (inputSource.handedness === 'left') {
-                    const rotateX = gamepad.axes[2];
-                    
-                    if (Math.abs(rotateX) > 0.2) {
-                        cameraRig.rotation.y += rotateX * 0.02;
+            if (session.inputSources) {
+                for (let inputSource of session.inputSources) {
+                    if (inputSource.gamepad) {
+                        const gamepad = inputSource.gamepad;
+                        
+                        if (gamepad.axes.length >= 4) {
+                            const thumbstickX = gamepad.axes[2];
+                            const thumbstickY = gamepad.axes[3];
+                            
+                            if (Math.abs(thumbstickX) > 0.1 || Math.abs(thumbstickY) > 0.1) {
+                                vrMovement.x = -thumbstickX * 0.1;
+                                vrMovement.z = -thumbstickY * 0.1;
+                            }
+                        }
+                        
+                        if (gamepad.buttons.length > 4) {
+                            if (gamepad.buttons[4] && gamepad.buttons[4].pressed) vrMovement.z -= 0.1;
+                            if (gamepad.buttons[5] && gamepad.buttons[5].pressed) vrMovement.z += 0.1;
+                        }
                     }
                 }
             }
             
-            // Apply movement relative to camera direction
             if (Math.abs(vrMovement.x) > 0.01 || Math.abs(vrMovement.z) > 0.01) {
-                const moveVector = new THREE.Vector3(vrMovement.x, 0, vrMovement.z);
-                moveVector.applyQuaternion(cameraRig.quaternion);
-                cameraRig.position.add(moveVector);
+                const cameraDirection = new THREE.Vector3();
+                camera.getWorldDirection(cameraDirection);
+                cameraDirection.y = 0;
+                cameraDirection.normalize();
+                
+                const rightDirection = new THREE.Vector3();
+                rightDirection.crossVectors(cameraDirection, new THREE.Vector3(0, 1, 0));
+                
+                dolly.position.addScaledVector(rightDirection, vrMovement.x);
+                dolly.position.addScaledVector(cameraDirection, vrMovement.z);
             }
         }
         
-        function togglePassthrough() {
-            passthroughEnabled = !passthroughEnabled;
-            
-            if (passthroughEnabled) {
-                // Make scene transparent for passthrough
-                scene.background = null;
-                renderer.setClearColor(0x000000, 0);
-                
-                // Adjust ground opacity
-                const ground = scene.getObjectByName('ground');
-                if (ground) {
-                    ground.material.opacity = 0.3;
-                }
-                
-                // Reduce fog for better passthrough visibility
-                scene.fog.near = 20;
-                scene.fog.far = 100;
-                
-            } else {
-                // Restore normal scene
-                scene.background = new THREE.Color(0x87CEEB);
-                renderer.setClearColor(0x87CEEB, 1);
-                
-                const ground = scene.getObjectByName('ground');
-                if (ground) {
-                    ground.material.opacity = 0.9;
-                }
-                
-                scene.fog.near = 10;
-                scene.fog.far = 50;
-            }
-        }
-        
-        function setupAudio() {
-            // Audio initialization happens on user interaction
-        }
-        
-        async function toggleAudio() {
-            const audioButton = document.getElementById('audioButton');
-            
-            if (!audioEnabled) {
-                try {
-                    await Tone.start();
-                    audioEnabled = true;
-                    audioButton.textContent = '🔇 Disable Ambient Sounds';
-                    
-                    createWindSound();
-                    createBirdSounds();
-                    createHarpSounds();
-                    
-                } catch (error) {
-                    console.error('Failed to enable audio:', error);
-                }
-            } else {
-                Tone.Transport.stop();
-                audioEnabled = false;
-                audioButton.textContent = '🔊 Enable Ambient Sounds';
-            }
-        }
-        
-        function createWindSound() {
-            const noise = new Tone.Noise("pink").start();
-            const filter = new Tone.Filter(300, "lowpass").toDestination();
-            const autoFilter = new Tone.AutoFilter(0.1).connect(filter);
-            
-            noise.connect(autoFilter);
-            noise.volume.value = -30;
-            
-            windSound = { noise, filter, autoFilter };
-        }
-        
-        function createBirdSounds() {
-            const birdNotes = [
-                ['C5', 'E5', 'G5'],
-                ['F5', 'A5', 'C6'],
-                ['D5', 'F#5', 'A5']
-            ];
-            
-            birdNotes.forEach((notes, index) => {
-                const synth = new Tone.Synth({
-                    oscillator: { type: "sine" },
-                    envelope: {
-                        attack: 0.05,
-                        decay: 0.1,
-                        sustain: 0.1,
-                        release: 0.2
-                    }
-                }).toDestination();
-                
-                synth.volume.value = -25;
-                
-                const pattern = new Tone.Pattern((time, note) => {
-                    synth.triggerAttackRelease(note, "16n", time);
-                }, notes, "random");
-                
-                pattern.start(0);
-                pattern.interval = Math.random() * 15 + 10;
-                
-                birdSounds.push({ synth, pattern });
-            });
-            
-            Tone.Transport.start();
-        }
-        
-        function createHarpSounds() {
-            harpSynth = new Tone.PolySynth(Tone.Synth, {
-                oscillator: { type: "triangle" },
-                envelope: {
-                    attack: 0.2,
-                    decay: 0.8,
-                    sustain: 0.2,
-                    release: 1.5
-                }
-            }).toDestination();
-            
-            const reverb = new Tone.Reverb(3).toDestination();
-            harpSynth.connect(reverb);
-            harpSynth.volume.value = -20;
-        }
-        
-        function createFlower(x, y, z, scale = 1, type = 'default') {
+        function createFlower(x, y, z, scale = 1) {
             const flowerGroup = new THREE.Group();
             
-            // Different flower types for variety
-            const flowerTypes = {
-                'rose': { petals: 20, colors: [0xff1744, 0xff4569, 0xff6b8a], center: 0xffeb3b },
-                'daisy': { petals: 12, colors: [0xffffff, 0xfffacd, 0xfffff0], center: 0xffd700 },
-                'tulip': { petals: 6, colors: [0xff69b4, 0xff1493, 0xc71585], center: 0x8b008b },
-                'sunflower': { petals: 16, colors: [0xffd700, 0xffa500, 0xff8c00], center: 0x8b4513 },
-                'default': { petals: 8, colors: [0xff69b4, 0xff1493, 0xffc0cb], center: 0xffff00 }
-            };
-            
-            const flowerType = flowerTypes[type] || flowerTypes.default;
-            
-            // Create petals with more realistic shapes
+            // Flower petals
             const petalGeometry = new THREE.SphereGeometry(0.3 * scale, 8, 6);
-            petalGeometry.scale(1, 0.3, 0.6);
+            const petalColors = [0xff69b4, 0xff1493, 0xffc0cb, 0xff6347, 0xffd700];
             
-            for (let i = 0; i < flowerType.petals; i++) {
-                const angle = (i / flowerType.petals) * Math.PI * 2;
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
                 const petal = new THREE.Mesh(
                     petalGeometry,
-                    new THREE.MeshPhongMaterial({ 
-                        color: flowerType.colors[Math.floor(Math.random() * flowerType.colors.length)],
-                        emissive: 0x222222,
-                        shininess: 30
+                    new THREE.MeshLambertMaterial({ 
+                        color: petalColors[Math.floor(Math.random() * petalColors.length)]
                     })
                 );
-                
-                const petalRadius = 0.5 * scale;
                 petal.position.set(
-                    Math.cos(angle) * petalRadius,
+                    Math.cos(angle) * 0.8 * scale,
                     0,
-                    Math.sin(angle) * petalRadius
+                    Math.sin(angle) * 0.8 * scale
                 );
-                petal.rotation.z = angle;
-                petal.rotation.x = 0.3;
                 petal.castShadow = true;
-                petal.receiveShadow = true;
                 flowerGroup.add(petal);
             }
             
-            // Flower center with texture
-            const centerGeometry = new THREE.SphereGeometry(0.3 * scale, 16, 12);
+            // Flower center
+            const centerGeometry = new THREE.SphereGeometry(0.4 * scale, 8, 6);
             const center = new THREE.Mesh(
                 centerGeometry,
-                new THREE.MeshPhongMaterial({ 
-                    color: flowerType.center,
-                    emissive: flowerType.center,
-                    emissiveIntensity: 0.2
-                })
+                new THREE.MeshLambertMaterial({ color: 0xffff00 })
             );
             center.castShadow = true;
             flowerGroup.add(center);
             
-            // Stem with curve
-            const stemCurve = new THREE.CatmullRomCurve3([
-                new THREE.Vector3(0, 0, 0),
-                new THREE.Vector3(0.1 * scale, -0.5 * scale, 0),
-                new THREE.Vector3(-0.1 * scale, -1 * scale, 0),
-                new THREE.Vector3(0, -1.5 * scale, 0)
-            ]);
-            
-            const stemGeometry = new THREE.TubeGeometry(stemCurve, 20, 0.05 * scale, 8, false);
+            // Stem
+            const stemGeometry = new THREE.CylinderGeometry(0.1 * scale, 0.1 * scale, 2 * scale);
             const stem = new THREE.Mesh(
                 stemGeometry,
                 new THREE.MeshLambertMaterial({ color: 0x228b22 })
             );
+            stem.position.y = -1 * scale;
             stem.castShadow = true;
             flowerGroup.add(stem);
             
-            // Realistic leaves
-            const leafGeometry = new THREE.Shape();
-            leafGeometry.moveTo(0, 0);
-            leafGeometry.bezierCurveTo(0.3, 0.1, 0.3, 0.4, 0, 0.5);
-            leafGeometry.bezierCurveTo(-0.3, 0.4, -0.3, 0.1, 0, 0);
-            
-            const leafExtrudeSettings = {
-                depth: 0.02 * scale,
-                bevelEnabled: true,
-                bevelSegments: 2,
-                steps: 2,
-                bevelSize: 0.01,
-                bevelThickness: 0.01
-            };
-            
-            const leafMesh = new THREE.ExtrudeGeometry(leafGeometry, leafExtrudeSettings);
-            
-            for (let i = 0; i < 2; i++) {
+            // Leaves
+            for (let i = 0; i < 3; i++) {
+                const leafGeometry = new THREE.SphereGeometry(0.3 * scale, 6, 4);
                 const leaf = new THREE.Mesh(
-                    leafMesh,
-                    new THREE.MeshLambertMaterial({ 
-                        color: 0x32cd32,
-                        side: THREE.DoubleSide
-                    })
+                    leafGeometry,
+                    new THREE.MeshLambertMaterial({ color: 0x32cd32 })
                 );
-                leaf.scale.set(scale, scale, scale);
+                leaf.scale.set(0.5, 0.1, 1);
                 leaf.position.set(
-                    (i === 0 ? 0.3 : -0.3) * scale,
-                    -0.7 * scale,
-                    0
+                    (Math.random() - 0.5) * scale,
+                    -0.5 * scale - i * 0.3 * scale,
+                    (Math.random() - 0.5) * scale
                 );
-                leaf.rotation.z = i === 0 ? -0.5 : 0.5;
+                leaf.rotation.z = Math.random() * 0.5;
                 leaf.castShadow = true;
                 flowerGroup.add(leaf);
             }
@@ -857,263 +466,114 @@
             flowerGroup.position.set(x, y, z);
             flowerGroup.userData.originalY = y;
             flowerGroup.userData.swayOffset = Math.random() * Math.PI * 2;
-            flowerGroup.userData.flowerType = type;
-            
-            // Make flower interactive
-            interactiveFlowers.push(flowerGroup);
             
             return flowerGroup;
         }
         
-        function createFlowerBouquet() {
-            // Clear existing flowers
-            flowers.forEach(flower => {
-                scene.remove(flower);
-                const index = interactiveFlowers.indexOf(flower);
-                if (index > -1) interactiveFlowers.splice(index, 1);
-            });
+        function createFlowerName() {
+            flowers.forEach(flower => scene.remove(flower));
             flowers = [];
             
             const name = document.getElementById('nameInput').value.toUpperCase() || 'LOVE';
-            const letterSpacing = 4;
-            const startX = -(name.length * letterSpacing) / 2;
+            const letterWidth = 2;
+            const startX = -(name.length * letterWidth) / 2;
             
-            // Create 3D text with flowers
             for (let i = 0; i < name.length; i++) {
                 const letter = name[i];
                 if (letter === ' ') continue;
                 
-                const letterFlowers = create3DLetterFlowers(letter, startX + i * letterSpacing, 2, 0);
+                const letterFlowers = createLetterFlowers(letter, startX + i * letterWidth, 2, 0);
                 letterFlowers.forEach(flower => {
                     flowers.push(flower);
                     scene.add(flower);
                 });
             }
-            
-            // Add some floating petals for effect
-            createFloatingPetals();
         }
         
-        function create3DLetterFlowers(letter, offsetX, offsetY, offsetZ) {
+        function createLetterFlowers(letter, offsetX, offsetY, offsetZ) {
             const flowerPositions = getLetterPositions(letter);
             const letterFlowers = [];
-            const flowerTypes = ['rose', 'daisy', 'tulip', 'sunflower'];
             
-            // Create flowers in multiple layers for 3D effect
-            flowerPositions.forEach((pos, index) => {
-                // Front layer
-                const flowerType = flowerTypes[Math.floor(Math.random() * flowerTypes.length)];
+            flowerPositions.forEach(pos => {
                 const flower = createFlower(
                     pos.x + offsetX,
                     pos.y + offsetY,
                     pos.z + offsetZ,
-                    1.5,
-                    flowerType
+                    0.8
                 );
                 letterFlowers.push(flower);
-                
-                // Add depth with additional flowers
-                if (index % 2 === 0) {
-                    const backFlower = createFlower(
-                        pos.x + offsetX + (Math.random() - 0.5) * 0.3,
-                        pos.y + offsetY,
-                        pos.z + offsetZ - 0.5,
-                        1.2,
-                        flowerType
-                    );
-                    letterFlowers.push(backFlower);
-                }
             });
             
             return letterFlowers;
         }
         
-        function createFloatingPetals() {
-            const petalCount = 30;
+        function getLetterPositions(letter) {
+            const patterns = {
+                'A': [{x:-0.5,y:0,z:0}, {x:0.5,y:0,z:0}, {x:-0.3,y:0.5,z:0}, {x:0.3,y:0.5,z:0}, {x:0,y:1,z:0}, {x:0,y:0.3,z:0}],
+                'B': [{x:-0.5,y:0,z:0}, {x:-0.5,y:0.5,z:0}, {x:-0.5,y:1,z:0}, {x:0,y:0,z:0}, {x:0,y:0.5,z:0}, {x:0,y:1,z:0}, {x:0.3,y:0.25,z:0}, {x:0.3,y:0.75,z:0}],
+                'C': [{x:-0.3,y:0,z:0}, {x:-0.3,y:0.5,z:0}, {x:-0.3,y:1,z:0}, {x:0,y:0.1,z:0}, {x:0,y:0.9,z:0}, {x:0.3,y:0.2,z:0}, {x:0.3,y:0.8,z:0}],
+                'D': [{x:-0.5,y:0,z:0}, {x:-0.5,y:0.5,z:0}, {x:-0.5,y:1,z:0}, {x:0,y:0,z:0}, {x:0,y:1,z:0}, {x:0.3,y:0.2,z:0}, {x:0.3,y:0.5,z:0}, {x:0.3,y:0.8,z:0}],
+                'E': [{x:-0.5,y:0,z:0}, {x:-0.5,y:0.5,z:0}, {x:-0.5,y:1,z:0}, {x:0,y:0,z:0}, {x:0,y:0.5,z:0}, {x:0,y:1,z:0}, {x:0.3,y:0,z:0}, {x:0.3,y:1,z:0}],
+                'F': [{x:-0.5,y:0,z:0}, {x:-0.5,y:0.5,z:0}, {x:-0.5,y:1,z:0}, {x:0,y:0.5,z:0}, {x:0,y:1,z:0}, {x:0.3,y:1,z:0}],
+                'G': [{x:-0.3,y:0,z:0}, {x:-0.3,y:0.5,z:0}, {x:-0.3,y:1,z:0}, {x:0,y:0.1,z:0}, {x:0,y:0.9,z:0}, {x:0.3,y:0.2,z:0}, {x:0.3,y:0.5,z:0}, {x:0.2,y:0.5,z:0}],
+                'H': [{x:-0.5,y:0,z:0}, {x:-0.5,y:0.5,z:0}, {x:-0.5,y:1,z:0}, {x:0.5,y:0,z:0}, {x:0.5,y:0.5,z:0}, {x:0.5,y:1,z:0}, {x:0,y:0.5,z:0}],
+                'I': [{x:0,y:0,z:0}, {x:0,y:0.5,z:0}, {x:0,y:1,z:0}, {x:-0.3,y:0,z:0}, {x:0.3,y:0,z:0}, {x:-0.3,y:1,z:0}, {x:0.3,y:1,z:0}],
+                'J': [{x:0.5,y:0.5,z:0}, {x:0.5,y:1,z:0}, {x:0,y:0,z:0}, {x:-0.3,y:0.2,z:0}, {x:0.3,y:1,z:0}, {x:-0.3,y:1,z:0}],
+                'K': [{x:-0.5,y:0,z:0}, {x:-0.5,y:0.5,z:0}, {x:-0.5,y:1,z:0}, {x:0,y:0.5,z:0}, {x:0.3,y:0.2,z:0}, {x:0.3,y:0.8,z:0}, {x:0.5,y:0,z:0}, {x:0.5,y:1,z:0}],
+                'L': [{x:-0.5,y:0,z:0}, {x:-0.5,y:0.5,z:0}, {x:-0.5,y:1,z:0}, {x:0,y:0,z:0}, {x:0.3,y:0,z:0}],
+                'M': [{x:-0.5,y:0,z:0}, {x:-0.5,y:0.5,z:0}, {x:-0.5,y:1,z:0}, {x:0.5,y:0,z:0}, {x:0.5,y:0.5,z:0}, {x:0.5,y:1,z:0}, {x:0,y:0.7,z:0}, {x:-0.2,y:0.8,z:0}, {x:0.2,y:0.8,z:0}],
+                'N': [{x:-0.5,y:0,z:0}, {x:-0.5,y:0.5,z:0}, {x:-0.5,y:1,z:0}, {x:0.5,y:0,z:0}, {x:0.5,y:0.5,z:0}, {x:0.5,y:1,z:0}, {x:0,y:0.5,z:0}, {x:-0.2,y:0.7,z:0}, {x:0.2,y:0.3,z:0}],
+                'O': [{x:-0.3,y:0.2,z:0}, {x:-0.3,y:0.5,z:0}, {x:-0.3,y:0.8,z:0}, {x:0.3,y:0.2,z:0}, {x:0.3,y:0.5,z:0}, {x:0.3,y:0.8,z:0}, {x:0,y:0,z:0}, {x:0,y:1,z:0}],
+                'P': [{x:-0.5,y:0,z:0}, {x:-0.5,y:0.5,z:0}, {x:-0.5,y:1,z:0}, {x:0,y:0.5,z:0}, {x:0,y:1,z:0}, {x:0.3,y:0.75,z:0}],
+                'Q': [{x:-0.3,y:0.2,z:0}, {x:-0.3,y:0.5,z:0}, {x:-0.3,y:0.8,z:0}, {x:0.3,y:0.2,z:0}, {x:0.3,y:0.5,z:0}, {x:0.3,y:0.8,z:0}, {x:0,y:0,z:0}, {x:0,y:1,z:0}, {x:0.4,y:0.1,z:0}],
+                'R': [{x:-0.5,y:0,z:0}, {x:-0.5,y:0.5,z:0}, {x:-0.5,y:1,z:0}, {x:0,y:0.5,z:0}, {x:0,y:1,z:0}, {x:0.3,y:0.75,z:0}, {x:0.1,y:0.4,z:0}, {x:0.4,y:0.1,z:0}],
+                'S': [{x:-0.3,y:0.8,z:0}, {x:0,y:1,z:0}, {x:0.3,y:0.8,z:0}, {x:0,y:0.5,z:0}, {x:-0.3,y:0.2,z:0}, {x:0,y:0,z:0}, {x:0.3,y:0.2,z:0}],
+                'T': [{x:-0.4,y:1,z:0}, {x:-0.2,y:1,z:0}, {x:0,y:1,z:0}, {x:0.2,y:1,z:0}, {x:0.4,y:1,z:0}, {x:0,y:0,z:0}, {x:0,y:0.3,z:0}, {x:0,y:0.7,z:0}],
+                'U': [{x:-0.5,y:0.3,z:0}, {x:-0.5,y:0.7,z:0}, {x:-0.5,y:1,z:0}, {x:0.5,y:0.3,z:0}, {x:0.5,y:0.7,z:0}, {x:0.5,y:1,z:0}, {x:0,y:0,z:0}, {x:-0.2,y:0.1,z:0}, {x:0.2,y:0.1,z:0}],
+                'V': [{x:-0.5,y:0.7,z:0}, {x:-0.5,y:1,z:0}, {x:0.5,y:0.7,z:0}, {x:0.5,y:1,z:0}, {x:-0.2,y:0.3,z:0}, {x:0.2,y:0.3,z:0}, {x:0,y:0,z:0}],
+                'W': [{x:-0.5,y:0,z:0}, {x:-0.5,y:0.5,z:0}, {x:-0.5,y:1,z:0}, {x:0.5,y:0,z:0}, {x:0.5,y:0.5,z:0}, {x:0.5,y:1,z:0}, {x:0,y:0.3,z:0}, {x:-0.2,y:0.2,z:0}, {x:0.2,y:0.2,z:0}],
+                'X': [{x:-0.4,y:0.1,z:0}, {x:-0.2,y:0.3,z:0}, {x:0,y:0.5,z:0}, {x:0.2,y:0.7,z:0}, {x:0.4,y:0.9,z:0}, {x:0.4,y:0.1,z:0}, {x:0.2,y:0.3,z:0}, {x:-0.2,y:0.7,z:0}, {x:-0.4,y:0.9,z:0}],
+                'Y': [{x:-0.4,y:0.8,z:0}, {x:-0.2,y:0.6,z:0}, {x:0,y:0.5,z:0}, {x:0.2,y:0.6,z:0}, {x:0.4,y:0.8,z:0}, {x:0,y:0,z:0}, {x:0,y:0.25,z:0}, {x:-0.4,y:1,z:0}, {x:0.4,y:1,z:0}],
+                'Z': [{x:-0.4,y:1,z:0}, {x:-0.1,y:1,z:0}, {x:0.2,y:1,z:0}, {x:0.4,y:1,z:0}, {x:0.1,y:0.7,z:0}, {x:-0.1,y:0.3,z:0}, {x:-0.4,y:0,z:0}, {x:-0.1,y:0,z:0}, {x:0.2,y:0,z:0}, {x:0.4,y:0,z:0}]
+            };
             
-            for (let i = 0; i < petalCount; i++) {
-                const petalGeometry = new THREE.SphereGeometry(0.1, 6, 4);
-                petalGeometry.scale(1, 0.3, 0.6);
-                
-                const petal = new THREE.Mesh(
-                    petalGeometry,
-                    new THREE.MeshPhongMaterial({
-                        color: 0xff69b4,
-                        transparent: true,
-                        opacity: 0.8
-                    })
-                );
-                
-                petal.position.set(
-                    (Math.random() - 0.5) * 20,
-                    Math.random() * 5 + 5,
-                    (Math.random() - 0.5) * 20
-                );
-                
-                petal.userData.floatingPetal = true;
-                petal.userData.velocity = new THREE.Vector3(
-                    (Math.random() - 0.5) * 0.02,
-                    -Math.random() * 0.01 - 0.01,
-                    (Math.random() - 0.5) * 0.02
-                );
-                petal.userData.rotationSpeed = Math.random() * 0.1;
-                
-                scene.add(petal);
-                flowers.push(petal);
-            }
+            return patterns[letter] || [{x:0,y:0.5,z:0}];
         }
         
         function createFlowerHeart() {
-            // Clear existing flowers
-            flowers.forEach(flower => {
-                scene.remove(flower);
-                const index = interactiveFlowers.indexOf(flower);
-                if (index > -1) interactiveFlowers.splice(index, 1);
-            });
+            flowers.forEach(flower => scene.remove(flower));
             flowers = [];
             
-            const scale = 4;
-            const flowerTypes = ['rose', 'daisy', 'tulip', 'sunflower'];
+            const heartPositions = [];
+            const scale = 3;
             
-            // Create a large 3D heart shape
-            for (let t = 0; t < Math.PI * 2; t += 0.1) {
-                // Heart equation
+            for (let t = 0; t < Math.PI * 2; t += 0.3) {
                 const x = scale * (16 * Math.pow(Math.sin(t), 3));
-                const z = scale * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                const y = scale * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                heartPositions.push({x: x/10, y: y/10 + 2, z: 0});
                 
-                // Create flowers at different heights for 3D effect
-                for (let y = 0; y <= 3; y += 0.5) {
-                    const flowerType = flowerTypes[Math.floor(Math.random() * flowerTypes.length)];
-                    const flower = createFlower(
-                        x/10,
-                        y + 1,
-                        z/10,
-                        0.8 + Math.random() * 0.4,
-                        flowerType
-                    );
-                    flowers.push(flower);
-                    scene.add(flower);
-                    
-                    // Add some variation in depth
-                    if (Math.random() < 0.3) {
-                        const depthFlower = createFlower(
-                            x/10 + (Math.random() - 0.5),
-                            y + 1,
-                            z/10 + (Math.random() - 0.5),
-                            0.6,
-                            flowerType
-                        );
-                        flowers.push(depthFlower);
-                        scene.add(depthFlower);
+                for (let depth = -1; depth <= 1; depth += 0.5) {
+                    if (depth !== 0) {
+                        heartPositions.push({x: x/10, y: y/10 + 2, z: depth});
                     }
                 }
             }
             
-            // Fill the center with smaller flowers
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 20; i++) {
                 const angle = Math.random() * Math.PI * 2;
                 const radius = Math.random() * 2;
-                const height = Math.random() * 3;
-                
-                const flower = createFlower(
-                    Math.cos(angle) * radius,
-                    height + 1,
-                    Math.sin(angle) * radius,
-                    0.5 + Math.random() * 0.3,
-                    flowerTypes[Math.floor(Math.random() * flowerTypes.length)]
-                );
-                flowers.push(flower);
-                scene.add(flower);
+                heartPositions.push({
+                    x: Math.cos(angle) * radius,
+                    y: Math.sin(angle) * radius + 2,
+                    z: (Math.random() - 0.5) * 2
+                });
             }
             
-            createFloatingPetals();
-        }
-        
-        function createSpiralGarden() {
-            // Clear existing flowers
-            flowers.forEach(flower => {
-                scene.remove(flower);
-                const index = interactiveFlowers.indexOf(flower);
-                if (index > -1) interactiveFlowers.splice(index, 1);
+            heartPositions.forEach(pos => {
+                const flower = createFlower(pos.x, pos.y, pos.z, 0.6);
+                flowers.push(flower);
+                scene.add(flower);
             });
-            flowers = [];
-            
-            const spirals = 3;
-            const flowersPerSpiral = 30;
-            const flowerTypes = ['rose', 'daisy', 'tulip', 'sunflower'];
-            
-            for (let s = 0; s < spirals; s++) {
-                const spiralOffset = (s / spirals) * Math.PI * 2;
-                
-                for (let i = 0; i < flowersPerSpiral; i++) {
-                    const t = i / flowersPerSpiral * Math.PI * 4;
-                    const radius = 0.5 + t * 0.5;
-                    
-                    const x = Math.cos(t + spiralOffset) * radius;
-                    const z = Math.sin(t + spiralOffset) * radius;
-                    const y = i * 0.15;
-                    
-                    const flowerType = flowerTypes[Math.floor(Math.random() * flowerTypes.length)];
-                    const flower = createFlower(
-                        x,
-                        y + 0.5,
-                        z,
-                        0.8 + (i / flowersPerSpiral) * 0.5,
-                        flowerType
-                    );
-                    
-                    flowers.push(flower);
-                    scene.add(flower);
-                }
-            }
-            
-            // Add central fountain of flowers
-            for (let i = 0; i < 20; i++) {
-                const flower = createFlower(
-                    (Math.random() - 0.5) * 2,
-                    Math.random() * 5,
-                    (Math.random() - 0.5) * 2,
-                    1 + Math.random() * 0.5,
-                    flowerTypes[Math.floor(Math.random() * flowerTypes.length)]
-                );
-                flowers.push(flower);
-                scene.add(flower);
-            }
-            
-            createFloatingPetals();
-        }
-        
-        function getLetterPositions(letter) {
-            const patterns = {
-                'A': [{x:-0.6,y:0,z:0}, {x:0.6,y:0,z:0}, {x:-0.4,y:0.5,z:0}, {x:0.4,y:0.5,z:0}, {x:-0.2,y:1,z:0}, {x:0.2,y:1,z:0}, {x:0,y:1.5,z:0}, {x:-0.3,y:0.7,z:0}, {x:0.3,y:0.7,z:0}],
-                'B': [{x:-0.6,y:0,z:0}, {x:-0.6,y:0.5,z:0}, {x:-0.6,y:1,z:0}, {x:-0.6,y:1.5,z:0}, {x:-0.2,y:0,z:0}, {x:-0.2,y:0.75,z:0}, {x:-0.2,y:1.5,z:0}, {x:0.2,y:0.1,z:0}, {x:0.2,y:1.4,z:0}, {x:0.4,y:0.4,z:0}, {x:0.4,y:0.75,z:0}, {x:0.4,y:1.1,z:0}],
-                'C': [{x:-0.4,y:0.3,z:0}, {x:-0.4,y:0.6,z:0}, {x:-0.4,y:0.9,z:0}, {x:-0.4,y:1.2,z:0}, {x:-0.1,y:0,z:0}, {x:-0.1,y:1.5,z:0}, {x:0.2,y:0.1,z:0}, {x:0.2,y:1.4,z:0}, {x:0.4,y:0.3,z:0}, {x:0.4,y:1.2,z:0}],
-                'D': [{x:-0.6,y:0,z:0}, {x:-0.6,y:0.5,z:0}, {x:-0.6,y:1,z:0}, {x:-0.6,y:1.5,z:0}, {x:-0.2,y:0,z:0}, {x:-0.2,y:1.5,z:0}, {x:0.2,y:0.2,z:0}, {x:0.2,y:1.3,z:0}, {x:0.5,y:0.5,z:0}, {x:0.5,y:0.75,z:0}, {x:0.5,y:1,z:0}],
-                'E': [{x:-0.6,y:0,z:0}, {x:-0.6,y:0.5,z:0}, {x:-0.6,y:1,z:0}, {x:-0.6,y:1.5,z:0}, {x:-0.2,y:0,z:0}, {x:-0.2,y:0.75,z:0}, {x:-0.2,y:1.5,z:0}, {x:0.2,y:0,z:0}, {x:0.2,y:0.75,z:0}, {x:0.2,y:1.5,z:0}, {x:0.5,y:0,z:0}, {x:0.5,y:1.5,z:0}],
-                'F': [{x:-0.6,y:0,z:0}, {x:-0.6,y:0.5,z:0}, {x:-0.6,y:1,z:0}, {x:-0.6,y:1.5,z:0}, {x:-0.2,y:0.75,z:0}, {x:-0.2,y:1.5,z:0}, {x:0.2,y:0.75,z:0}, {x:0.2,y:1.5,z:0}, {x:0.5,y:1.5,z:0}],
-                'G': [{x:-0.4,y:0.3,z:0}, {x:-0.4,y:0.6,z:0}, {x:-0.4,y:0.9,z:0}, {x:-0.4,y:1.2,z:0}, {x:-0.1,y:0,z:0}, {x:-0.1,y:1.5,z:0}, {x:0.2,y:0.1,z:0}, {x:0.2,y:1.4,z:0}, {x:0.5,y:0.3,z:0}, {x:0.5,y:0.75,z:0}, {x:0.2,y:0.75,z:0}, {x:0.5,y:1.2,z:0}],
-                'H': [{x:-0.6,y:0,z:0}, {x:-0.6,y:0.5,z:0}, {x:-0.6,y:1,z:0}, {x:-0.6,y:1.5,z:0}, {x:0.6,y:0,z:0}, {x:0.6,y:0.5,z:0}, {x:0.6,y:1,z:0}, {x:0.6,y:1.5,z:0}, {x:-0.2,y:0.75,z:0}, {x:0,y:0.75,z:0}, {x:0.2,y:0.75,z:0}],
-                'I': [{x:0,y:0,z:0}, {x:0,y:0.5,z:0}, {x:0,y:1,z:0}, {x:0,y:1.5,z:0}, {x:-0.4,y:0,z:0}, {x:0.4,y:0,z:0}, {x:-0.4,y:1.5,z:0}, {x:0.4,y:1.5,z:0}],
-                'J': [{x:0.6,y:0.5,z:0}, {x:0.6,y:1,z:0}, {x:0.6,y:1.5,z:0}, {x:0.2,y:0,z:0}, {x:-0.2,y:0.1,z:0}, {x:-0.5,y:0.3,z:0}, {x:0.2,y:1.5,z:0}, {x:-0.2,y:1.5,z:0}],
-                'K': [{x:-0.6,y:0,z:0}, {x:-0.6,y:0.5,z:0}, {x:-0.6,y:1,z:0}, {x:-0.6,y:1.5,z:0}, {x:-0.1,y:0.75,z:0}, {x:0.2,y:0.4,z:0}, {x:0.2,y:1.1,z:0}, {x:0.5,y:0,z:0}, {x:0.5,y:1.5,z:0}],
-                'L': [{x:-0.6,y:0,z:0}, {x:-0.6,y:0.5,z:0}, {x:-0.6,y:1,z:0}, {x:-0.6,y:1.5,z:0}, {x:-0.2,y:0,z:0}, {x:0.2,y:0,z:0}, {x:0.5,y:0,z:0}],
-                'M': [{x:-0.7,y:0,z:0}, {x:-0.7,y:0.5,z:0}, {x:-0.7,y:1,z:0}, {x:-0.7,y:1.5,z:0}, {x:0.7,y:0,z:0}, {x:0.7,y:0.5,z:0}, {x:0.7,y:1,z:0}, {x:0.7,y:1.5,z:0}, {x:0,y:0.9,z:0}, {x:-0.35,y:1.2,z:0}, {x:0.35,y:1.2,z:0}],
-                'N': [{x:-0.6,y:0,z:0}, {x:-0.6,y:0.5,z:0}, {x:-0.6,y:1,z:0}, {x:-0.6,y:1.5,z:0}, {x:0.6,y:0,z:0}, {x:0.6,y:0.5,z:0}, {x:0.6,y:1,z:0}, {x:0.6,y:1.5,z:0}, {x:-0.3,y:0.5,z:0}, {x:0,y:0.75,z:0}, {x:0.3,y:1,z:0}],
-                'O': [{x:-0.4,y:0.3,z:0}, {x:-0.4,y:0.75,z:0}, {x:-0.4,y:1.2,z:0}, {x:0.4,y:0.3,z:0}, {x:0.4,y:0.75,z:0}, {x:0.4,y:1.2,z:0}, {x:-0.2,y:0,z:0}, {x:0.2,y:0,z:0}, {x:-0.2,y:1.5,z:0}, {x:0.2,y:1.5,z:0}, {x:0,y:0.1,z:0}, {x:0,y:1.4,z:0}],
-                'P': [{x:-0.6,y:0,z:0}, {x:-0.6,y:0.5,z:0}, {x:-0.6,y:1,z:0}, {x:-0.6,y:1.5,z:0}, {x:-0.2,y:0.75,z:0}, {x:-0.2,y:1.5,z:0}, {x:0.2,y:1.4,z:0}, {x:0.2,y:0.9,z:0}, {x:0.5,y:1.1,z:0}],
-                'Q': [{x:-0.4,y:0.3,z:0}, {x:-0.4,y:0.75,z:0}, {x:-0.4,y:1.2,z:0}, {x:0.4,y:0.3,z:0}, {x:0.4,y:0.75,z:0}, {x:0.4,y:1.2,z:0}, {x:-0.2,y:0,z:0}, {x:0.2,y:0,z:0}, {x:-0.2,y:1.5,z:0}, {x:0.2,y:1.5,z:0}, {x:0.6,y:0.1,z:0}],
-                'R': [{x:-0.6,y:0,z:0}, {x:-0.6,y:0.5,z:0}, {x:-0.6,y:1,z:0}, {x:-0.6,y:1.5,z:0}, {x:-0.2,y:0.75,z:0}, {x:-0.2,y:1.5,z:0}, {x:0.2,y:1.4,z:0}, {x:0.2,y:0.9,z:0}, {x:0.5,y:1.1,z:0}, {x:0.1,y:0.6,z:0}, {x:0.4,y:0.3,z:0}, {x:0.6,y:0,z:0}],
-                'S': [{x:-0.4,y:1.2,z:0}, {x:-0.2,y:1.5,z:0}, {x:0.2,y:1.5,z:0}, {x:0.4,y:1.2,z:0}, {x:-0.2,y:0.75,z:0}, {x:0.2,y:0.75,z:0}, {x:-0.4,y:0.3,z:0}, {x:-0.2,y:0,z:0}, {x:0.2,y:0,z:0}, {x:0.4,y:0.3,z:0}],
-                'T': [{x:-0.6,y:1.5,z:0}, {x:-0.3,y:1.5,z:0}, {x:0,y:1.5,z:0}, {x:0.3,y:1.5,z:0}, {x:0.6,y:1.5,z:0}, {x:0,y:0,z:0}, {x:0,y:0.5,z:0}, {x:0,y:1,z:0}, {x:0,y:1.3,z:0}],
-                'U': [{x:-0.6,y:0.5,z:0}, {x:-0.6,y:1,z:0}, {x:-0.6,y:1.5,z:0}, {x:0.6,y:0.5,z:0}, {x:0.6,y:1,z:0}, {x:0.6,y:1.5,z:0}, {x:-0.4,y:0.2,z:0}, {x:0,y:0,z:0}, {x:0.4,y:0.2,z:0}, {x:-0.2,y:0.1,z:0}, {x:0.2,y:0.1,z:0}],
-                'V': [{x:-0.6,y:1,z:0}, {x:-0.6,y:1.5,z:0}, {x:0.6,y:1,z:0}, {x:0.6,y:1.5,z:0}, {x:-0.4,y:0.6,z:0}, {x:0.4,y:0.6,z:0}, {x:-0.2,y:0.3,z:0}, {x:0.2,y:0.3,z:0}, {x:0,y:0,z:0}],
-                'W': [{x:-0.7,y:0.5,z:0}, {x:-0.7,y:1,z:0}, {x:-0.7,y:1.5,z:0}, {x:0.7,y:0.5,z:0}, {x:0.7,y:1,z:0}, {x:0.7,y:1.5,z:0}, {x:0,y:0.4,z:0}, {x:-0.35,y:0.2,z:0}, {x:0.35,y:0.2,z:0}, {x:-0.5,y:0,z:0}, {x:0.5,y:0,z:0}, {x:0,y:0.1,z:0}],
-                'X': [{x:-0.6,y:0,z:0}, {x:-0.3,y:0.4,z:0}, {x:0,y:0.75,z:0}, {x:0.3,y:0.4,z:0}, {x:0.6,y:0,z:0}, {x:0.6,y:1.5,z:0}, {x:0.3,y:1.1,z:0}, {x:-0.3,y:1.1,z:0}, {x:-0.6,y:1.5,z:0}],
-                'Y': [{x:-0.6,y:1.2,z:0}, {x:-0.3,y:0.9,z:0}, {x:0,y:0.75,z:0}, {x:0.3,y:0.9,z:0}, {x:0.6,y:1.2,z:0}, {x:0,y:0,z:0}, {x:0,y:0.3,z:0}, {x:0,y:0.5,z:0}, {x:-0.6,y:1.5,z:0}, {x:0.6,y:1.5,z:0}],
-                'Z': [{x:-0.6,y:1.5,z:0}, {x:-0.2,y:1.5,z:0}, {x:0.2,y:1.5,z:0}, {x:0.6,y:1.5,z:0}, {x:0.3,y:1.2,z:0}, {x:0,y:0.75,z:0}, {x:-0.3,y:0.3,z:0}, {x:-0.6,y:0,z:0}, {x:-0.2,y:0,z:0}, {x:0.2,y:0,z:0}, {x:0.6,y:0,z:0}]
-            };
-            
-            return patterns[letter] || [{x:0,y:0.75,z:0}];
         }
         
         function setupControls() {
@@ -1162,7 +622,6 @@
             document.addEventListener('keydown', onKeyDown);
             document.addEventListener('keyup', onKeyUp);
             
-            // Mouse controls
             let mouseX = 0, mouseY = 0;
             document.addEventListener('mousemove', (event) => {
                 if (document.pointerLockElement === renderer.domElement) {
@@ -1182,10 +641,8 @@
         }
         
         function animate() {
-            // Handle VR movement
             handleVRMovement();
             
-            // Handle desktop movement
             if (!renderer.xr.isPresenting) {
                 direction.x = Number(moveRight) - Number(moveLeft);
                 direction.z = Number(moveBackward) - Number(moveForward);
@@ -1206,40 +663,12 @@
             }
             
             const time = Date.now() * 0.001;
-            
-            // Animate flowers
             flowers.forEach(flower => {
                 if (flower.userData.originalY !== undefined) {
-                    // Gentle swaying motion
                     flower.position.y = flower.userData.originalY + Math.sin(time + flower.userData.swayOffset) * 0.1;
                     flower.rotation.z = Math.sin(time + flower.userData.swayOffset) * 0.05;
-                    flower.rotation.y += 0.002;
-                }
-                
-                // Animate floating petals
-                if (flower.userData.floatingPetal) {
-                    flower.position.add(flower.userData.velocity);
-                    flower.rotation.x += flower.userData.rotationSpeed;
-                    flower.rotation.y += flower.userData.rotationSpeed * 0.5;
-                    
-                    // Reset petal when it falls too low
-                    if (flower.position.y < -1) {
-                        flower.position.y = 10;
-                        flower.position.x = (Math.random() - 0.5) * 20;
-                        flower.position.z = (Math.random() - 0.5) * 20;
-                    }
                 }
             });
-            
-            // Animate particle system
-            if (particleSystem) {
-                const positions = particleSystem.geometry.attributes.position.array;
-                for (let i = 0; i < positions.length; i += 3) {
-                    positions[i + 1] += Math.sin(time + i) * 0.01;
-                }
-                particleSystem.geometry.attributes.position.needsUpdate = true;
-                particleSystem.rotation.y += 0.0005;
-            }
             
             renderer.render(scene, camera);
         }
@@ -1249,58 +678,32 @@
             const vrStatus = document.getElementById('vrStatus');
             
             if (!navigator.xr) {
-                vrMessage.textContent = '❌ WebXR not supported. Please use the Meta Quest browser.';
+                vrMessage.textContent = 'WebXR not supported. Please use the Meta Quest browser.';
                 vrStatus.style.display = 'block';
                 setTimeout(() => vrStatus.style.display = 'none', 5000);
                 return;
             }
             
             try {
-                vrMessage.textContent = '🥽 Starting VR session...';
+                vrMessage.textContent = 'Starting VR session...';
                 vrStatus.style.display = 'block';
                 
-                // Request session with optional features for passthrough
-                const sessionInit = {
-                    requiredFeatures: ['local-floor'],
-                    optionalFeatures: ['bounded-floor', 'hand-tracking']
-                };
-                
-                const session = await navigator.xr.requestSession('immersive-vr', sessionInit);
-                
-                // Set up session
-                session.addEventListener('end', () => {
-                    vrMessage.textContent = 'VR session ended. You can restart anytime!';
-                    vrStatus.style.display = 'block';
-                    setTimeout(() => vrStatus.style.display = 'none', 3000);
+                const session = await navigator.xr.requestSession('immersive-vr', {
+                    requiredFeatures: ['local-floor']
                 });
                 
                 await renderer.xr.setSession(session);
-                
-                vrMessage.textContent = '✨ VR session started! Enjoy your magical flower garden!';
+                vrMessage.textContent = 'VR session started! Enjoy your garden!';
                 setTimeout(() => vrStatus.style.display = 'none', 2000);
-                
-                // Try to enable passthrough if available
-                if (passthroughEnabled) {
-                    enablePassthroughInVR(session);
-                }
                 
             } catch (error) {
                 console.error('VR session error:', error);
-                vrMessage.textContent = '❌ VR failed to start. Check headset connection and permissions.';
+                vrMessage.textContent = 'VR failed to start. Check if headset is connected and try again.';
                 vrStatus.style.display = 'block';
                 setTimeout(() => vrStatus.style.display = 'none', 5000);
             }
         }
         
-        function enablePassthroughInVR(session) {
-            // Note: Passthrough API is still experimental and may not be available
-            // This is a placeholder for when the API becomes more standardized
-            if (session.environmentBlendMode) {
-                console.log('Environment blend mode:', session.environmentBlendMode);
-            }
-        }
-        
-        // Window resize handler
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
