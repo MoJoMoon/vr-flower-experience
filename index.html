@@ -375,14 +375,14 @@
                             const thumbstickY = gamepad.axes[3];
                             
                             if (Math.abs(thumbstickX) > 0.1 || Math.abs(thumbstickY) > 0.1) {
-                                vrMovement.x -= thumbstickX * 0.1;
-                                vrMovement.z -= thumbstickY * 0.1;
+                                vrMovement.x += thumbstickX * 0.1;
+                                vrMovement.z += thumbstickY * 0.1;
                             }
                         }
                         
                         if (gamepad.buttons.length > 4) {
-                            if (gamepad.buttons[4] && gamepad.buttons[4].pressed) vrMovement.z += 0.1;
-                            if (gamepad.buttons[5] && gamepad.buttons[5].pressed) vrMovement.z -= 0.1;
+                            if (gamepad.buttons[4] && gamepad.buttons[4].pressed) vrMovement.z -= 0.1;
+                            if (gamepad.buttons[5] && gamepad.buttons[5].pressed) vrMovement.z += 0.1;
                         }
                     }
                 }
@@ -398,7 +398,7 @@
                 rightDirection.crossVectors(cameraDirection, new THREE.Vector3(0, 1, 0));
                 
                 dolly.position.addScaledVector(rightDirection, vrMovement.x);
-                dolly.position.addScaledVector(cameraDirection, vrMovement.z);
+                dolly.position.addScaledVector(cameraDirection, -vrMovement.z);
             }
         }
         
