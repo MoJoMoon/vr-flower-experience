@@ -124,10 +124,11 @@
         • Use WASD to move, mouse to look around<br>
         • Click "Enter VR Mode" on Meta Quest for immersive experience<br><br>
         <strong>VR Instructions:</strong><br>
-        • Use thumbsticks on controllers to move around<br>
+        • <strong>Right Controller:</strong> Use thumbstick to move around (forward/back/left/right)<br>
+        • <strong>Left Controller:</strong> Use thumbstick to look around (turn left/right, look up/down)<br>
         • Press A/X button to move forward, B/Y to move backward<br>
         • Pull trigger for visual feedback<br>
-        • Look around naturally with your head movement
+        • Natural head movement still works for looking around
     </div>
 
     <script>
@@ -366,11 +367,13 @@
             vrMovement.z = 0;
             
             if (session.inputSources) {
-                for (let inputSource of session.inputSources) {
+                for (let i = 0; i < session.inputSources.length; i++) {
+                    const inputSource = session.inputSources[i];
                     if (inputSource.gamepad) {
                         const gamepad = inputSource.gamepad;
                         
-                        if (gamepad.axes.length >= 4) {
+                        // Right controller (index 0) - Movement
+                        if (i === 0 && gamepad.axes.length >= 4) {
                             const thumbstickX = gamepad.axes[2];
                             const thumbstickY = gamepad.axes[3];
                             
@@ -380,6 +383,25 @@
                             }
                         }
                         
+                        // Left controller (index 1) - Look/Turn
+                        if (i === 1 && gamepad.axes.length >= 4) {
+                            const lookX = gamepad.axes[2];
+                            const lookY = gamepad.axes[3];
+                            
+                            if (Math.abs(lookX) > 0.1) {
+                                // Horizontal look (left/right turning)
+                                camera.rotation.y -= lookX * 0.02;
+                            }
+                            
+                            if (Math.abs(lookY) > 0.1) {
+                                // Vertical look (up/down)
+                                camera.rotation.x -= lookY * 0.02;
+                                // Clamp vertical rotation to prevent over-rotation
+                                camera.rotation.x = Math.max(-Math.PI/2, Math.min(Math.PI/2, camera.rotation.x));
+                            }
+                        }
+                        
+                        // Alternative: Use buttons for movement if thumbsticks aren't working
                         if (gamepad.buttons.length > 4) {
                             if (gamepad.buttons[4] && gamepad.buttons[4].pressed) vrMovement.z -= 0.1;
                             if (gamepad.buttons[5] && gamepad.buttons[5].pressed) vrMovement.z += 0.1;
